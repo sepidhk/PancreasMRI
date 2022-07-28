@@ -5,36 +5,36 @@ from skimage import io
 
 
 # img_list = []
-folder_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/slice/v0"
-# base_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/output_montage"
+folder_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity"
+# base_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
 
-# save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/assemble_outputs2"
+save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
 
 # if not os.path.exists(save_path):
 #     os.makedirs(save_path)
 
-for folder in os.listdir(folder_path): 
+# for folder in os.listdir(folder_path): 
 
-    imgpath = os.path.join(folder_path,folder)
-    img_list = []
+#     imgpath = os.path.join(folder_path,folder)
+#     img_list = []
 
-    print("processing {} \n".format(folder))
+#     print("processing {} \n".format(folder))
 
-    for slice in sorted(os.listdir(imgpath)):
+#     for slice in sorted(os.listdir(imgpath)):
 
-        # file = io.imread(os.path.join(imgpath,slice))
-        # img_list.append(file)
-        print(slice)
+#         # file = io.imread(os.path.join(imgpath,slice))
+#         # img_list.append(file)
+#         print(slice)
     
 
-#     if len(img_list) == 30: 
-#         result = util.montage(img_list, grid_shape = (5,6), multichannel=True)
-#     else:
-#         result = util.montage(img_list, grid_shape = (6,8), multichannel=True)
+# #     if len(img_list) == 30: 
+# #         result = util.montage(img_list, grid_shape = (5,6), multichannel=True)
+# #     else:
+# #         result = util.montage(img_list, grid_shape = (6,8), multichannel=True)
                 
-#     save_name = save_path + "/{}.png".format(folder)
+# #     save_name = save_path + "/{}.png".format(folder)
             
-#     io.imsave(save_name,result)
+# #     io.imsave(save_name,result)
 
 
 # for img in os.listdir(folder_path):
@@ -59,6 +59,13 @@ for folder in os.listdir(folder_path):
 #     save_name = save_path + "/{}.png".format(img.split(".png")[0])
 
 #     io.imsave(save_name,result)
+
+imglist = []
+for img in os.listdir(folder_path):
+    imgpath = os.path.join(folder_path,img)
+    imglist.append(io.imread(imgpath)) 
+result = util.montage(imglist, grid_shape = (23,20), multichannel=True) 
+io.imsave("/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage.png",result)
 
 
 

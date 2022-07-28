@@ -32,14 +32,14 @@ def dice(x, y):
 
 #=----------
 
-prediction_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/flip_images/v6'
+prediction_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/flip_images/runs2_v10'
 groundtruth_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/data/QAed/testing/labels'
 num_classes = 2
 #--------------------
 
 test_sub_dice = []
 
-f = open('/nfs/masi/zhouy26/22Summer/BodyAtlas/dice/v6.txt', 'w')
+f = open('/nfs/masi/zhouy26/22Summer/BodyAtlas/dice/v10.txt', 'w')
 
 for image in os.listdir(prediction_dir):
     if image != "img0056_mask.nii":
@@ -63,7 +63,8 @@ for image in os.listdir(prediction_dir):
         #     sub_dice.append(score)
 
         dice_score = dice(imagenp == 1, truthnp == 1)
-        test_sub_dice.append(dice_score)
+        if(dice_score >= 0.001):
+            test_sub_dice.append(dice_score)
 
         # test_sub_dice.append(sub_dice)
         # sub_avg = np.mean(sub_dice)
@@ -80,7 +81,7 @@ plt.boxplot(test_sub_dice)
 plt.xlabel('img')
 plt.ylim([0,1])
 plt.ylabel('Dice')
-plt.savefig('/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/box_plotv6.png')
+plt.savefig('/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/box_plotv10.png')
 
 print('Final average all Dice: {}'.format(np.mean(test_sub_dice)))
 f.write('Final average all Dice: {}'.format(np.mean(test_sub_dice)))

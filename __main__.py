@@ -29,6 +29,7 @@ from optimizers.lr_scheduler import WarmupCosineSchedule
 from networks.unest import UNesT
 from monai.metrics import DiceMetric
 from monai.data import decollate_batch
+from networks.unet import UNet
 
 def count_parameters(model):
     params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -56,6 +57,8 @@ def main():
     def train(global_step,train_loader,val_loader,dice_val_best, val_shape_dict):
         model.train()
         epoch_iterator = tqdm(train_loader,desc="Training (X / X Steps) (loss=X.X)",dynamic_ncols=True)
+        loss_sum = 0.0
+
         for step, batch in enumerate(epoch_iterator):
             x, y = (batch["image"].to(device), batch["label"].to(device))
             logit_map = model(x)
@@ -70,8 +73,15 @@ def main():
             if args.lrdecay:
                 scheduler.step()
             optimizer.zero_grad()
+            loss_sum = loss_sum + loss
+
             epoch_iterator.set_description("Training (%d / %d Steps) (loss=%2.5f)" % (global_step, args.num_steps, loss))
-            writer.add_scalar("train/loss", scalar_value=loss, global_step=global_step)
+
+            # draw average loss of certain steps, may need to be modified if changing batch size
+            if step %23== 22:
+                writer.add_scalar("train/loss", scalar_value=loss_sum/23, global_step=global_step)
+                print(f'average loss for 23 steps:{loss_sum/23}')
+                loss_sum = 0.0
 
             global_step += 1
             if global_step % args.eval_num == 0 and global_step!=0:
@@ -165,9 +175,9 @@ def main():
     parser.add_argument('--res_block', action='store_true')
     parser.add_argument('--conv_block', action='store_true')
     parser.add_argument('--featResBlock', action='store_true')
-    parser.add_argument('--roi_x', default=48, type=int)
-    parser.add_argument('--roi_y', default=48, type=int)
-    parser.add_argument('--roi_z', default=48, type=int)
+    parser.add_argument('--roi_x', default=32, type=int)
+    parser.add_argument('--roi_y', default=32, type=int)
+    parser.add_argument('--roi_z', default=32, type=int)
     parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--dropout_rate', default=0.0, type=float)
     parser.add_argument('--fold', default=0, type=int)
@@ -218,7 +228,7 @@ def main():
     elif args.model_type == 'swin_unetrv2':
 
         model = SwinUNETR_v2(in_channels=1,
-                          out_channels=14,
+                          out_channels=2,
                           img_size=(96, 96, 96),
                           feature_size=48,
                           patch_size=2,
@@ -233,13 +243,24 @@ def main():
     elif args.model_type == 'nest_unetr':
 
         model = NestUNETR(in_channels=1,
-                          out_channels=14,
+                          out_channels=2,
+
                         ).to(device)
 
     elif args.model_type == 'unest':
         model = UNesT(in_channels=1,
                     out_channels=2,
-                ).to(device)                    
+                ).to(device)
+
+    elif args.model_type == 'unet':
+        model = UNet( 
+            spatial_dims=3,           
+            in_channels=1,
+            out_channels=2,
+            channels=(16,32,64,128,256),
+            strides=(2,2,2,2,2),
+            ).to(device)
+
             
     # load pre-trained weights
     if args.pretrain:
