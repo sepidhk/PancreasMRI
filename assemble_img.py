@@ -1,17 +1,20 @@
 import os 
 from skimage import util
 from skimage import io
+from imutils import build_montages
+import cv2
+import numpy as np
 
 
 
 # img_list = []
-folder_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity"
+folder_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/slice/norm98"
 # base_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
 
-save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
+save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/intensity_montage"
 
-# if not os.path.exists(save_path):
-#     os.makedirs(save_path)
+if not os.path.exists(save_path):
+    os.makedirs(save_path)
 
 # for folder in os.listdir(folder_path): 
 
@@ -42,6 +45,7 @@ save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
 #     #groundtruth label
 #     img1_path = os.path.join(folder_path,img)
 #     #image
+
 #     img2_path = os.path.join(base_path,"images",img.split('_mask')[0]+".png")
 #     #v0
 #     img3_path = os.path.join(base_path,"v0",img)
@@ -61,11 +65,16 @@ save_path = "/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage"
 #     io.imsave(save_name,result)
 
 imglist = []
-for img in os.listdir(folder_path):
+for img in sorted(os.listdir(folder_path)):
     imgpath = os.path.join(folder_path,img)
-    imglist.append(io.imread(imgpath)) 
-result = util.montage(imglist, grid_shape = (23,20), multichannel=True) 
-io.imsave("/nfs/masi/zhouy26/22Summer/BodyAtlas/figure/intensity_montage.png",result)
+    imglist.append(cv2.imread(imgpath))
+print(len(imglist))    
+    
+result = build_montages(imglist, (100,80),(5,6)) 
+
+randomName = str(np.random.randint(100,1000))
+for montage in result:
+    cv2.imwrite(f"{save_path}/montag_norm98.jpg",montage)
 
 
 

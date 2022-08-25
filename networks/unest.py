@@ -28,7 +28,8 @@ class UNesT(nn.Module):
         in_channels: int,
         out_channels: int,
         # img_size: Tuple[int, int, int] = [96, 96, 96],
-        img_size: Tuple[int, int, int] = [48, 48, 48],
+        # img_size: Tuple[int, int, int] = [48, 48, 48],
+        img_size: Tuple[int, int, int] = [32, 32, 32],
         feature_size: int = 16,
         patch_size: int = 2,
         depths: Tuple[int, int, int, int] = [2, 2, 2, 2],
@@ -100,7 +101,7 @@ class UNesT(nn.Module):
 
         self.nestViT = NestTransformer3D(
             # img_size=96, 
-            img_size=48,            
+            img_size=32,            
             in_chans=1, 
             patch_size=4, 
             num_levels=3, 

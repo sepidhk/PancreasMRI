@@ -78,13 +78,14 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") ## speci
 # base_save_pred_dir = args.base_save_pred_dir
 
 # set the saved model path
-checkpoint_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/runs/runs2/fold0_20.v10_unet_size/model.pt'
+checkpoint_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/runs/runs3/fold4_20.v0/model_final_epoch.pt'
 
 # set the test image path 
 path = '/nfs/masi/zhouy26/22Summer/BodyAtlas/data/QAed/testing/images'
+# path = '/nfs/masi/zhouy26/22Summer/BodyAtlas/data/QAed/crop/testing/images'
 
 ###-------------------------------------------------------------------
-results_folder = '/nfs/masi/zhouy26/22Summer/BodyAtlas/UNesT_inference/runs2_v10'
+results_folder = '/nfs/masi/zhouy26/22Summer/BodyAtlas/UNesT_inference/runs3-final/fold4'
 checkpoints = [checkpoint_dir]
 
 # if not os.path.exists(base_save_pred_dir):
@@ -116,16 +117,12 @@ val_transforms = Compose(
         # Spacingd(keys=["image"], pixdim=(1.0, 1.0, 2.0), mode=("bilinear")),
         Orientationd(keys=["image"], axcodes="RAS"),
         ScaleIntensityRangePercentilesd(
-            keys=["image"], lower=0, upper=95,
+            keys=["image"], lower=0, upper=100,
             b_min=0.0, b_max=1.0, clip=True,
         ),
         SpatialPadd(keys=["image"], spatial_size=(256, 256, 32)),
         # SpatialPadd(keys=["image"], spatial_size=(96, 96, 96)),
-
-        # ScaleIntensityRangePercentilesd(
-        #     keys=["image"], lower=0, upper=98,
-        #     b_min=0.0, b_max=1.0, clip=True,
-        # ),            
+  
         # CropForegroundd(keys=["image", "label"], source_key="image"),
         ToTensord(keys=["image"]),
     ]
@@ -145,7 +142,7 @@ val_transforms = Compose(
 
 # import and load models
 # img_size = (96,96,96)
-img_size = (256,256,32)
+img_size = (32,32,32)
 # need to set the correct model class
 
 # model = SwinUNETR(in_channels=1,
@@ -157,17 +154,17 @@ img_size = (256,256,32)
 #                      num_heads=[3, 6, 12, 24],
 #                      window_size=[7, 7, 7])
 
-# model = UNesT(in_channels=1,
-#             out_channels=2,
-#         ).to(device)
+model = UNesT(in_channels=1,
+            out_channels=2,
+        ).to(device)
 
-model = UNet( 
-    spatial_dims=3,           
-    in_channels=1,
-    out_channels=2,
-    channels=(16,32,64,128,256),
-    strides=(2,2,2,2,2),
-    ).to(device)
+# model = UNet( 
+#     spatial_dims=3,           
+#     in_channels=1,
+#     out_channels=2,
+#     channels=(16,32,64,128,256),
+#     strides=(2,2,2,2,2),
+#     ).to(device)
 # model = UNETR(
 #     in_channels=1,
 #     out_channels=14,

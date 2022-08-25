@@ -3,10 +3,10 @@ import nibabel as nib
 import numpy as np
 from monai.transforms import Flip
 
-image_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/outImages/v6'
+image_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/outImages/five_fold-run3final'
 subject_list = os.listdir(image_dir)
 
-saving_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/flip_images/v6'
+saving_dir = '/nfs/masi/zhouy26/22Summer/BodyAtlas/flip_images/five_fold-run3final'
 
 if not os.path.exists(saving_dir):
     os.makedirs(saving_dir)

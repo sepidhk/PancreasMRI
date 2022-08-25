@@ -19,13 +19,13 @@ from tensorboardX import SummaryWriter
 from monai.losses import DiceLoss,DiceCELoss
 from monai.inferers import sliding_window_inference
 from monai.transforms import AsDiscrete,Activations,Compose
-from monai.networks.nets import SegResNet
+from monai.networks.nets import SwinUNETR 
 from tqdm import tqdm
 from data_utils import get_loader
 from networks.unetr import UNETR
 # from monai.networks.nets import UNETR
 from optimizers.lr_scheduler import WarmupCosineSchedule
-#from networks.swin3d_unetrv2 import SwinUNETR as SwinUNETR_v2
+from networks.swin3d_unetrv2 import SwinUNETR as SwinUNETR_v2
 from networks.unest import UNesT
 from monai.metrics import DiceMetric
 from monai.data import decollate_batch
@@ -78,9 +78,10 @@ def main():
             epoch_iterator.set_description("Training (%d / %d Steps) (loss=%2.5f)" % (global_step, args.num_steps, loss))
 
             # draw average loss of certain steps, may need to be modified if changing batch size
-            if step %23== 22:
-                writer.add_scalar("train/loss", scalar_value=loss_sum/23, global_step=global_step)
-                print(f'average loss for 23 steps:{loss_sum/23}')
+            loss_step = 23
+            if step %loss_step== loss_step-1:
+                writer.add_scalar("train/loss", scalar_value=loss_sum/loss_step, global_step=global_step)
+                print(f'average loss for {loss_step} steps:{loss_sum/loss_step}')
                 loss_sum = 0.0
 
             global_step += 1
@@ -229,7 +230,7 @@ def main():
 
         model = SwinUNETR_v2(in_channels=1,
                           out_channels=2,
-                          img_size=(96, 96, 96),
+                          img_size=(32, 32, 32),
                           feature_size=48,
                           patch_size=2,
                           depths=[2, 2, 2, 2],
