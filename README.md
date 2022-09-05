@@ -13,5 +13,10 @@ Because not all subjects have same dimension, and some of the images have 30 sli
 The segmentation used the newly released model UNesT on MONAI which achieved high performance in medical image segmentation. The 3D transformer structure allows it to capture semantic information and its CNN-based structure enables it to extract local information. The network structure is demonstrated in the diagram below:
 
 ## Training and Validation
-The experiments used fivefold cross validation method where 368 subjects are used for training, 92 subjects are used for validation, and 108 subjects are used for testing. 3D transfomer model UNesT is used to learn segmentation. The inputs are MRI scans, the manual labels from clinicians, and the outpus will be a predicted pancreas label where the pixel index is 1. The dice metrics are used to evaluate the segmentation, and DiceCE loss is used during the training. Data augmentation, including random flip, random affine, random rotate, random shift intensity are implemented. And the input size is (32, 32, 32) The training and validation curve is    
+The experiments used fivefold cross validation method where 368 subjects are used for training, 92 subjects are used for validation, and 108 subjects are used for testing. 3D transfomer model UNesT is used to learn segmentation. The inputs are MRI scans, the manual labels from clinicians, and the outpus will be a predicted pancreas label where the pixel index is 1. The dice metrics are used to evaluate the segmentation, and DiceCE loss is used during the training. Data augmentation, including random flip, random affine, random rotate, random shift intensity are implemented. And the input size is (32, 32, 32) The training and validation curve is as below: 
+
+## Results on Testing Set
+Using the model saved from fivefold cross validation, it achieves mean dice 0.724 on the testing set, and the example outputs is as below where red label is the predicted label and green label is the truth label. 
+
+
 
