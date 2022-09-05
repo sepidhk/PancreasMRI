@@ -29,5 +29,8 @@ The experiments used fivefold cross validation method where 368 subjects are use
 ## Results on Testing Set
 Using the model saved from fivefold cross validation, it achieves mean dice 0.724 on the testing set, and the example outputs is as below where red label is the predicted label and green label is the truth label. 
 
+## References 
+[1] Yu, Xin, Yinchi Zhou, Yucheng Tang et al. "Characterizing Renal Structures with 3D Block Aggregate Transformers." arXiv preprint arXiv:2203.02430 (2022). https://arxiv.org/pdf/2203.02430.pdf
+
 
 
