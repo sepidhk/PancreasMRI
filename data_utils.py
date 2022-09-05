@@ -62,14 +62,14 @@ def get_loader(args):
             # Spacingd(keys=["image", "label"], pixdim=(1.5, 1.5, 5.0), mode=("bilinear", "nearest")),
             Orientationd(keys=["image", "label"], axcodes="RAS"),
             ScaleIntensityRangePercentilesd(
-                keys=["image"], lower=0, upper=95,
+                keys=["image"], lower=0, upper=100,
                 b_min=0.0, b_max=1.0, clip=True,
             ),
-            SpatialPadd(keys=["image", "label"], spatial_size=(48, 48, 48)),
+            SpatialPadd(keys=["image", "label"], spatial_size=(32, 32, 32)),
             RandCropByPosNegLabeld(
                 keys=["image", "label"],
                 label_key="label",
-                spatial_size=(48, 48, 48),
+                spatial_size=(32, 32, 32),
                 pos=1,
                 neg=1,
                 num_samples=1,
@@ -79,33 +79,39 @@ def get_loader(args):
             RandFlipd(
                 keys=["image", "label"],
                 spatial_axis=[0],
-                prob=0.10,
+                prob=0.30,
             ),
             RandFlipd(
                 keys=["image", "label"],
                 spatial_axis=[1],
-                prob=0.10,
+                prob=0.30,
             ),
             RandFlipd(
                 keys=["image", "label"],
                 spatial_axis=[2],
-                prob=0.10,
+                prob=0.30,
             ),
             RandRotate90d(
                 keys=["image", "label"],
-                prob=0.10,
+                prob=0.30,
                 max_k = 3,
             ),
             RandShiftIntensityd(
                 keys=["image"],
                 offsets=0.10,
-                prob = 0.1,
+                prob = 0.3,
+            ),
+            RandAffined(
+                keys=['image','label'],
+                prob=0.3,
+                shear_range=(0.3,0.3,0.3)
             ),            
             #     keys=["image"], lower=0, upper=98,
             #     b_min=0.0, b_max=1.0, clip=True,
             # ),            
             # CropForegroundd(keys=["image", "label"], source_key="image"),
             ToTensord(keys=["image", "label"]),
+            # random affine, 
         ]
     )
     val_transforms = Compose(
@@ -115,10 +121,10 @@ def get_loader(args):
             # Spacingd(keys=["image", "label"], pixdim=(1.5, 1.5, 5.0), mode=("bilinear", "nearest")),
             Orientationd(keys=["image", "label"], axcodes="RAS"),
             ScaleIntensityRangePercentilesd(
-                keys=["image"], lower=0, upper=98,
+                keys=["image"], lower=0, upper=100,
                 b_min=0.0, b_max=1.0, clip=True,
             ),
-            SpatialPadd(keys=["image", "label"], spatial_size=(48, 48, 48)),
+            SpatialPadd(keys=["image", "label"], spatial_size=(32, 32, 32)),
 
             # ScaleIntensityRangePercentilesd(
             #     keys=["image"], lower=0, upper=98,
